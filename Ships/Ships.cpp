@@ -6,22 +6,20 @@
 void createMap(int map[10][10]);
 void createShip(int length, int map[10][10]);
 void printMap(int map[10][10]);
-int isFieldValid(int x, int y, int map[10][10])
+void putElementOnMap(int element, int x, int y, int map[10][10]);
+int isFieldValid(int x, int y, int map[10][10]);
 
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	int i;
 	int map[10][10];
 
 	srand(time(NULL));
 
 	//printf("%d",map);
 
-	for (i = 0; i < 10; i++)
-	{
-		createMap(map);
-	}
+
+	createMap(map);
 
 	//printMap(map);
 
@@ -49,7 +47,7 @@ void createMap(int map[10][10])
 
 void createShip(int length, int map[10][10])
 {
-	int i;
+	int i, j;
 
 	int bowX, bowY;
 
@@ -67,7 +65,7 @@ void createShip(int length, int map[10][10])
 		{
 			for (j = 0; j < 3; j++)
 			{
-				if (!isFieldValid(1, bowX + i, bowY + j, map))
+				if (!isFieldValid(bowX + i, bowY + j, map))
 				{
 					createShip(length, map);
 					return;
@@ -77,8 +75,7 @@ void createShip(int length, int map[10][10])
 
 		for (i = 0; i < length; i++)
 		{
-			for (j = 0;)
-				putElementOnMap(2, Bow)
+			putElementOnMap(2, bowX + i, bowY, map);
 		}
 
 	}
@@ -91,14 +88,26 @@ void createShip(int length, int map[10][10])
 		bowX = rand() % 10;//wspolrzedna  x dziobu
 		bowY = rand() % (10 - length);//wspolrzedna  y dziobu
 
-		for (i = 0; i<length; i++)
+		for (i = 0; i<3; i++)
 		{
-			printf("x: %d, y: %d \n", bowX, bowY + i);
-			map[bowX][bowY + i] = 2;
+			for (j = 0; j < length + 2; j++)
+			{
+				if (!isFieldValid(bowX + i, bowY + j, map))
+				{
+					createShip(length, map);
+					return;
+				}
+			}
+		}
+
+		for (j = 0; j < length; j++)
+		{
+			putElementOnMap(2, bowX, bowY + j, map);
 		}
 	}
 
-	// 	printMap(map);
+	printf("Wspolrzedne dziobu: [%d][%d]\n", bowX, bowY);
+	printf("Dlugosc statku: %d\n", length);
 
 	return;
 }
@@ -123,11 +132,13 @@ void printMap(int map[10][10])
 	return;
 }
 
-void putElementOnMap(int element, int x, int y)
+void putElementOnMap(int element, int x, int y, int map[10][10])
 {
 	// 2 - ship
 	// 1 - ship's surroundings
 	// 0 - empty
+
+	map[x][y] = element;
 }
 
 int isFieldValid(int x, int y, int map[10][10])
